@@ -35,6 +35,9 @@ fon = pygame.transform.scale(fon, (WIDTH, HEIGHT))
 player = Player(x=WIDTH//2, y=HEIGHT//2, radius=20, speed=5, 
                 color=(randint(1, 255), randint(1, 255), randint(1, 255)))
 
+# Food
+foods = [Food() for i in range(30)]
+
 # Змінна для керування роботою гри
 run = True 
 
@@ -52,13 +55,21 @@ while run:
     window.blit(fon, (bg_x - WIDTH, bg_y))
     window.blit(fon, (bg_x, bg_y - HEIGHT))
     window.blit(fon, (bg_x - WIDTH, bg_y - HEIGHT))
+    # 
     player.draw(window)
     player.move()
+    #
     bg_x += player.move_x
     bg_y += player.move_y
     bg_x %= WIDTH
     bg_y %= HEIGHT
-    
+    # Drawing food, update food coordinates, cheking collide with player
+    for food in foods:
+        food.draw(window)
+        food.update(player,WIDTH,HEIGHT)
+        if food.eatme(player):
+            foods.remove(food)
+
 
     # Перебираємо всі події (натискання клавіш, закриття вікна тощо)
     for event in pygame.event.get(): 

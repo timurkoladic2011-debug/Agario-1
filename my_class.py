@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 
 class Sprite:
     def __init__(self,x=10,y=10,w=50,h=50,speed=0,image=None,color=(200,0,0)):
@@ -60,3 +61,27 @@ class Player(Circle):
           
           if key[pygame.K_d]:
                self.move_x = -self.speed
+
+class Food(Circle):
+     def __init__(self):
+          x = randint(-5000,-10)
+          y = randint(-5000, -10)
+          radius = randint(2,5)
+          speed = 0
+          color = (randint(0, 255), randint(0, 255), randint(0, 255))
+          super().__init__(x, y, radius, speed, color)
+     
+     def update(self, player, w, h):
+          self.rect.x += player.move_x
+          self.rect.y += player.move_y
+          self.rect.x %= w
+          self.rect.y %= h
+
+     def eatme(self, player):
+          if self.rect.colliderect(player.rect):
+               player.radius += self.radius
+               player.rect.w = player.radius * 2
+               player.rect.h = player.radius * 2
+               return True
+          else:
+               return False
