@@ -58,6 +58,7 @@ while run:
     bg_y += player.move_y
     bg_x %= WIDTH
     bg_y %= HEIGHT
+    
 
     # Перебираємо всі події (натискання клавіш, закриття вікна тощо)
     for event in pygame.event.get(): 

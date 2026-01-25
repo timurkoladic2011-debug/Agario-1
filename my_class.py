@@ -46,6 +46,8 @@ class Player(Circle):
           self.move_y = 0
      
      def move(self):
+          self.move_x = 0
+          self.move_y = 0
           key = pygame.key.get_pressed()
           if key[pygame.K_w]:
                self.move_y = self.speed
