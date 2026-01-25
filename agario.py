@@ -1,14 +1,14 @@
 # Імпортуємо бібліотеку для створення ігор
-import
+import pygame
 
 # Імпортуємо функцію для генерації випадкових чисел
-from 
+from random import randint
 
 # Імпортуємо всі класи та функції з файлу my_class.py
-from 
+from my_class.pt
 
 # Ініціалізуємо всі модулі Pygame
-pygame.
+pygame.init()
 
 # Задаємо ширину і висоту вікна гри
 WIDTH, HEIGHT = 500, 500
@@ -21,23 +21,23 @@ GREEN = (0, 200, 0)
 
 
 # Створюємо вікно гри з заданими розмірами
-window = 
+window = pygame.display.set_mode((WIDTH, HEIGHT))
 # Створюємо об'єкт для контролю частоти кадрів (FPS)
-clock = 
+clock = pygame.time.Clock()
 
 # Змінна для збереження зображення фону (поки що порожня)
-fon = 
+#fon = 
 
 
 # Змінна для керування роботою гри
-run = 
+run = True 
 
 
 # Головний цикл гри, працює поки run == True
-while 
+while run == True:
 
     # Зафарбовуємо екран чорним кольором
-    window.
+    window.fill((0, 0, 0))
 
     # Малюємо фон у верхньому лівому куті (помилка, якщо fon == None)
     window.
@@ -55,4 +55,5 @@ while
     pygame.
 
     # Обмежуємо швидкість гри до 60 кадрів на секунду
+
     clock.
