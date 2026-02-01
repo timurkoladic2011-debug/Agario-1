@@ -39,13 +39,13 @@ player = Player(x=WIDTH//2, y=HEIGHT//2, radius=20, speed=5,
 foods = [Food() for i in range(30)]
 
 # Змінна для керування роботою гри
-run = True 
+run = True
 
 bg_x, bg_y = 0, 0
 
 # Головний цикл гри, працює поки run == True
 while run:
-    
+
     # Зафарбовуємо екран чорним кольором
     window.fill(BLACK)
 
