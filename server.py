@@ -5,8 +5,8 @@ import time
 from socket import socket, AF_INET,SOCK_STREAM
 # 1.3 імпортуємо Thread для паралельної обробки клієнтів і 
 # Lock для блокування доступу до спільних даних
-from lock import Lock
-from threading import Thread
+
+from threading import Thread, Lock
 
 # 2. Налаштування сервера
 # 2.1 адреса сервера (локальний комп'ютер)
@@ -33,13 +33,13 @@ server.listen(5)
 server.setblocking(False)
 
 # 5. Блокування для роботи з загальними словниками
-lock = lock()
+lock = Lock()
 
 
 # 10. Функція для закриття клієнта та очищення даних
 def colose_client(conn, id_pl):
     # 10.1 блокування для безпечного доступу до словників
-    wiht lock:
+    with lock:
         # 10.2 видаляємо клієнта зі словникаб якщо він ще там є
         if conn in clients:
 
@@ -63,7 +63,7 @@ def update_player():
     while True:
         # 9.1 проходимося по всіх клієнтах 
         # по списку ключів кліентів
-        for conn in list(clients, keys()):
+        for conn in list(clients.keys()):
             # 9.2 отримуємо id гравця по сокету з словника кліентів
             ids = clients[conn]
             # 9.3 рядок для відправки даних
@@ -86,7 +86,7 @@ def update_player():
             except (BrokenPipeError, OSError, ConnectionResetError):
                 # 9.8 якщо клієнт відключився - викликати функцію закрити клієнта
                     print("clinet disconecct", ids)
-                    c
+                    colose_client(conn,id_pl)
         # 9.9 затримка для FPS
         time.sleep(0.06)
 
@@ -191,7 +191,7 @@ while True:
         # 6.9 повідомлення про підключення
         print("Client connect", id_pl)
         # 6.10 запускаємо потік для обробки клієнта передаємо аргумент сокет кліента та його айді
-        Thread(target=handle_client ,args=(conn,id_pl)daemon=True).start
+        Thread(target=handle_client ,args=(conn,id_pl),daemon=True).start()
     except BlockingIOError:
         # 6.11 якщо немає нових клієнтів, пропускаємо
         pass
