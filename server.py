@@ -78,7 +78,7 @@ def update_player():
                     if ids != ids2:
                         # 9.6 формуємо рядок даних для іншого гравця 
                         # в кіні !!!обов'язково додаємо \n як кінець повідомлення
-                        data_send += f'{data_pl,["x"]}|,{data_pl["y"]}|{data_pl,["R"]}|,{data_pl["G"]}|,{data_pl["B"]}\n'
+                        data_send += f'{ids2}|{data_pl["x"]}|{data_pl["y"]}|{data_pl["r"]}|{data_pl["R"]}|{data_pl["G"]}|{data_pl["B"]}|{data_pl["nick"]}\n'
             try:
                 conn.send(data_send.encode())
                 # 9.7 надсилаємо дані клієнту
@@ -87,6 +87,7 @@ def update_player():
                 # 9.8 якщо клієнт відключився - викликати функцію закрити клієнта
                     print("clinet disconecct", ids)
                     colose_client(conn,id_pl)
+                    break
         # 9.9 затримка для FPS
         time.sleep(0.06)
 
@@ -99,7 +100,7 @@ def handle_client(conn, id_pl):
     while True:
         try:
             # 8.2 отримуємо нові дані від клієнта
-            new_data  = conn.recv(4096)
+            new_data  = conn.recv(4096).decode()
             # 8.3 якщо даних немає, пропускаємо
             if not new_data:
                 continue
@@ -127,11 +128,11 @@ def handle_client(conn, id_pl):
                 # 8.5.3 якщо рядок не правильного формату, пропускаємо
                 #тобто якщо в нас зайві дані приклєїлись, або навпаки загубились 
                 # має бути 6
-                if len(parts)!= 6:
+                if len(parts)!= 7:
                     continue
                 
                 # 8.5.4 розпаковуємо дані в окремі змінні
-                x, y,R,G,B = parts
+                x, y,r,R,G,B, nick = parts
                 # 8.5.5 оновлюємо дані гравця зі блокуванням
                 with lock:
                     players[id_pl]= {
@@ -140,7 +141,8 @@ def handle_client(conn, id_pl):
             "r":r,
             "R":R,
             "G":G,
-            "B":B
+            "B":B,
+            "nick":nick
         }
 
 
@@ -151,6 +153,7 @@ def handle_client(conn, id_pl):
             # 8.7 якщо клієнт відключився - закрити клієнта - функцію викликати
                 print("clinet disconecct", id_pl)
                 colose_client(conn,id_pl)
+                break
 
 # 7. Запуск потоку для постійного оновлення гравців постійна розсилка даних інших гравців
 Thread(target= update_player ,daemon=True).start()
@@ -168,26 +171,16 @@ while True:
         # 6.4 отримуємо початкові дані гравця, 
         # використай функцію обрізання порожніх симовлів та переходан на новий рядок,
         #  але тільки тут!
-        data_pl = conn.recv(1024).decode().strip()
+        #data_pl = conn.recv(1024).decode().strip()
 
         # 6.5 розбиваємо дані на окремі змінні - координати(два значення) радіус колір(три значення) 
         # наш рядок 0|0|20|255|0|0
-        x, y, r, R, G, B = data_pl.split("|") 
+        #x, y, r, R, G, B, nick = data_pl.split("|") 
         # 6.6 використовуємо порт клієнта як унікальний ID, 
         # просто зробити порт рядком, потрібне друге знаяення порта, тобто індекс 1
         id_pl = str(addr[1])
         # 6.7 додаємо клієнта в словник
         clients [conn] = id_pl
-        # 6.8 додаємо гравця в словник
-        players [id_pl]={
-            "x":x,
-            "y":y,
-            "r":r,
-            "R":R,
-            "G":G,
-            "B":B
-        }
-
         # 6.9 повідомлення про підключення
         print("Client connect", id_pl)
         # 6.10 запускаємо потік для обробки клієнта передаємо аргумент сокет кліента та його айді

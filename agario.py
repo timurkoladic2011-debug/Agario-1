@@ -37,7 +37,7 @@ fon = pygame.transform.scale(fon,(WIDTH,HEIGHT))
 
 # Гравець
 player = Player(x=WIDTH//2,y=HEIGHT//2,radius=20,
-                speed=5,color=((randint(0,255)),randint(0,255),randint(0,255)))
+                speed=5,color=((randint(0,255)),randint(0,255),randint(0,255)),nickname="ola-la")
 
 # Їжа
 foods = [Food() for i in range(300)]
@@ -51,16 +51,12 @@ fon_x,fon_y = 0,0
 word_x, word_y = 0,0
 other_player = {}  #id:{x:x, y:y, r:r, c:c}
 buffer = ""
-nickname = "Saha" 
+nickname = "ola-la"
 
 '''3. Налаштовуємо сокет клієнта'''
 ''''''
 client = socket(AF_INET,SOCK_STREAM ) # створити сокет
-client.connect(("6.tcp.eu.ngrok.io", 14414))#зв'язатись із сервером
-#(0,0,0)
-R,G,B = player.color
-my_data = f"{word_x}|{word_y}|{player.radius}|{R}|{G}|{B}|{nickname}\n"  # формує рядок з моїми даними - регеструємось в грі, незабудь про символ кінця рядка!
-client.send(my_data.encode()) # надсилаємо мої дані на сервер
+client.connect(("4.tcp.eu.ngrok.io",19326))#зв'язатись із сервером
 ''''''
 
 '''3.Функція для оновлення даних інших гравців для потоку, постійного оновлення '''
@@ -129,6 +125,7 @@ while run:
     word_y += player.move_y
     # формуємо рядко з моїми даними
     #!незабудь по симовл кінця рядка - \n
+    R,G,B = player.color
     my_data = f"{word_x}|{word_y}|{player.radius}|{R}|{G}|{B}|{nickname}\n"  # формує рядок з моїми даними - регеструємось в грі, незабудь про символ кінця рядка!
 
     # спробуємо відправити серверу наші дані
@@ -159,13 +156,13 @@ while run:
         # розраховуємо координати гравця 
         # відносно камери + половина камери
         # відносно нас -наші координати в світі
-        x = player_data["x"] - word_x +WIDTH//2
-        y = player_data["y"] - word_y + HEIGHT//2
+        x = player_data["x"] + WIDTH//2 - word_x
+        y = player_data["y"]  + HEIGHT//2 - word_y
         #малюємо коло за координатами, радіус та колір зі словникі
 
         pygame.draw.circle(window,player_data["color"],(x,y),player_data["r"])
-        name = font.render(player_data["nick"],True,WHITE)
-        window.blit(name,(x,y+player_data["r"]))
+        name = font.render(player_data["nick"],True,(0,0,0))
+        window.blit(name,(x,y-player_data["r"]-8))
         rect = pygame.Rect(x - player_data["r"],y - player_data["r"],
                            player_data["r"] * 2 ,player_data["r"] * 2)
         if player.rect.colliderect(rect):

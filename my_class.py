@@ -40,10 +40,12 @@ class Circle(Sprite):
         pygame.draw.circle(surface, self.color, self.rect.center, self.radius)
 
 class Player(Circle):
-      def __init__(self, x=100, y=100, radius=50, speed=0, color=(0, 0, 130)):
+      def __init__(self, x=100, y=100, radius=50, speed=0, color=(0, 0, 130), nickname= "player"):
            super().__init__(x, y, radius, speed, color)
            self.move_x = 0
            self.move_y = 0
+           self.font = pygame.font.Font(None, 16)
+           self.nick = self.font.render(nickname,True,(0,0,0))
       def move(self):
            self.move_x = 0
            self.move_y = 0
@@ -56,6 +58,10 @@ class Player(Circle):
                 self.move_x = -self.speed
            if key[pygame.K_d]:
                 self.move_x = self.speed     
+
+      def draw(self, window):
+           super().draw(window)
+           window.blit(self.nick,(self.rect.x, self.rect.y-8))
 
 class Food(Circle):
      def __init__(self):
