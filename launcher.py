@@ -13,7 +13,7 @@ class Cicrle:
         self.dx = choice([-5,-4,-3,3,4,5])  # Випадкова швидкість по X вибрати серед [-5, -4, -3, 3, 4, 5]
         self.dy = choice([-5,-4,-3,3,4,5])  # Випадкова швидкість по Y
         self.color = "#{:06x}".format(randint(0, 0xFFFFFF))  # Випадковий колір кола у HEX
-        self.id = canvas.create_oval(self.x0,self.y0,self.x1,self.y1,self.color)  # Створюємо коло на Canvas - передати координати верхньої та нижньої межі, колір
+        self.id = canvas.create_oval(self.x0,self.y0,self.x1,self.y1,fill=self.color)  # Створюємо коло на Canvas - передати координати верхньої та нижньої межі, колір
         self.canvas = canvas # Зберігаємо посилання на Canvas для подальшого руху
 
 
@@ -43,7 +43,8 @@ class Launcher(CTk):
         self.geometry("500x500") # Встановлюємо розмір вікна
         self.title("Agario")  # Встановлюємо заголовок вікна
         self.iconbitmap("icon.ico")  # Встановлюємо іконку вікна
-
+        self.end = False
+        self.restart = False
         # Створюємо Canvas для фону та анімації кол
         self.fon = CTkCanvas(self, width=500, height=500, bg = "#090e62", highlightthickness=0)
         self.fon.pack(fill="both") # Розтягуємо Canvas на весь простір вікна
@@ -63,31 +64,31 @@ class Launcher(CTk):
         # Додаємо картинки по обидва боки назви
         img1 = CTkLabel(self.fon,text="",image=CTkImage(Image.open("flash.png"),size=(30,30)))
         img2 = CTkLabel(self.fon,text="",image=CTkImage(Image.open("flash.png"),size=(30,30)))
-        img1.place(x = 50,y = 100)
-        img2.place(x = 200,y = 100)
+        img1.place(x = 185,y = 100)
+        img2.place(x = 280,y = 100)
         # Додаємо заголовок гри
         lbl = CTkLabel(self.fon,text="Agario",font=("Arial",20),text_color="#0BBAFF")
-        lbl.place(x = 100,y = 100)
+        lbl.place(x = 220,y = 100)
         # Поле для введення ніка
         self.nick_entry = CTkEntry(self.fon,width=100,height=40,corner_radius=20,
-                                   placeholder_text="Ведіть нікнейм:",fg_color="#2267FBE1",
+                                   placeholder_text="Ведіть нікнейм:",fg_color="#2267FB",
                                    text_color="#F2F2F2")
-        self.nick_entry.place(x= 100, y =200 )
+        self.nick_entry.place(x= 200, y =200 )
         # Поле для введення IP сервера
         self.ip_entry = CTkEntry(self.fon,width=100,height=40,corner_radius=20,
-                                   placeholder_text="Ведіть IP адресу:",fg_color="#2267FBE1",
+                                   placeholder_text="Ведіть IP адресу:",fg_color="#2267FB",
                                    text_color="#F2F2F2")
-        self.ip_entry.place(x = 100, y = 250)
+        self.ip_entry.place(x = 200, y = 250)
         # Поле для введення порту
         self.port_entry =  CTkEntry(self.fon,width=100,height=40,corner_radius=20,
-                                   placeholder_text="Ведіть порт:",fg_color="#2267FBE1",
+                                   placeholder_text="Ведіть порт:",fg_color="#2267FB",
                                    text_color="#F2F2F2")
-        self.port_entry.place(x = 100, y = 300)
+        self.port_entry.place(x = 200, y = 300)
 
         # Кнопка старту гри
         start_btn = CTkButton(self.fon,text="Почати гру",fg_color="#52FFE8", 
                               command=self.start_game)
-        start_btn.place(x=100,y = 400)
+        start_btn.place(x=180,y = 400)
 
         self.mainloop()  # Запускаємо головний цикл Tkinter
 
